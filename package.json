@@ -1,0 +1,36 @@
+{
+  "name": "secret-server-task",
+  "version": "1.0.0",
+  "description": "Your task is to implement a secret server and a React UI to manage the secrets. The secret server can be used to store and share secrets. But the secret can be read only before the expiration time. The secret may have TTL. After the expiration time the secret\r won’t be available anymore. You can find the detailed API documentation in the swagger.yaml file.\r We recommend to use [Swagger](https://editor.swagger.io/) or any other OpenAPI implementation to\r read the documentation.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/server.js",
+    "dev": "nodemon src/server.ts",
+    "build": "tsc -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asusual1540/secret-server-task.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/asusual1540/secret-server-task/issues"
+  },
+  "homepage": "https://github.com/asusual1540/secret-server-task#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.8"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^17.0.23",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.2"
+  }
+}
