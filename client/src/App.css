@@ -1,0 +1,23 @@
+@import '~antd/dist/antd.css';
+
+.logo {
+  float: left;
+  width: 120px;
+  height: 31px;
+  margin: 0px 24px 16px 0;
+}
+.site-layout .site-layout-background {
+  margin-top: 32px;
+  background: #fff;
+}
+
+.add-secret-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-secret-form {
+  width: 30%;
+}
