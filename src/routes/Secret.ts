@@ -17,7 +17,7 @@ const secretSchema = new Schema ({
     },
     expireAt : {
         type: Date,
-        default: () => new Date(+new Date() + 1*24*60*60*1000)
+        // default: () => new Date(+new Date() + 1*24*60*60*1000)
     }
 })
 secretSchema.index({ expireAt: 1 }, { expireAfterSeconds: 0 })
