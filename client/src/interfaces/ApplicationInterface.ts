@@ -1,9 +1,9 @@
 
 export interface SecretInterface {
     hash: string;
-    secretText?: string;
-    createdAt?: string;
-    expireAt?: string;
+    secretText: string;
+    createdAt: string;
+    expireAt: string;
 }
 
 export interface ApplicationInterface {

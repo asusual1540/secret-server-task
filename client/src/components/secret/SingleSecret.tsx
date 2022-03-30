@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import moment from 'moment';
 import { Form, Input, Typography } from 'antd'
 import { CopyOutlined, SmileOutlined } from '@ant-design/icons';
@@ -11,24 +11,29 @@ import { openNotification } from '../utils/Notification'
 const { Title } = Typography
 
 const SingleSecret: React.FC = () => {
-    const [form] = Form.useForm();
+    const [form] = Form.useForm()
+    const [hasSecret, setHasSecret] = useState(false)
     const { applicationState } = useContext(ApplicationContext)
     const copyToClipBoard = (text:string) => {
         CopyToClipboard(text)
         openNotification('bottom', 'Success', 'The hash was copied to clipboard.', <SmileOutlined style={{ color: '#108ee9' }} />)
     }
     useEffect(() => {
+        if (!applicationState.secret.secretText.length) setHasSecret(false)
+        else setHasSecret(true)
+        const creation = applicationState.secret.createdAt.length ? `${moment(applicationState.secret.createdAt, "YYYY-MM-DD HH:mm:ss")}` : ''
+        const expiration = applicationState.secret.expireAt.length ? `${moment(applicationState.secret.expireAt, "YYYY-MM-DD HH:mm:ss")}` : ''
         form.setFieldsValue({
             hash: applicationState.secret.hash,
             secretText: applicationState.secret.secretText,
-            createdAt: `${moment(applicationState.secret.createdAt, "YYYY-MM-DD HH:mm:ss")}`,
-            expireAt: `${moment(applicationState.secret.expireAt, "YYYY-MM-DD HH:mm:ss")}`
+            createdAt: creation,
+            expireAt: expiration
         });
     }, [applicationState, form])
 
     return (
         <div>
-            <Form
+            {hasSecret ? <Form
                 name="search_secret"
                 form={form}
                 className="search-secret"
@@ -66,6 +71,8 @@ const SingleSecret: React.FC = () => {
                     <Input readOnly={true} />
                 </Form.Item>
             </Form>
+            : <div></div>}
+            
         </div>
     )
 }

@@ -34,9 +34,11 @@ const Secret: React.FC = () => {
       } else if (response.data.status === 'failed') {
         const err_res = response.data
         openNotification('bottom', err_res.status.capitalize(), err_res.message, <FrownOutlined style={{ color: '#ff2800' }} />)
+        setSecret({ hash: '', secretText: '', expireAt: '', createdAt: ''})
       }
     } catch (error) {
       setLoading(false)
+      setSecret({ hash: '', secretText: '', expireAt: '', createdAt: ''})
       const err = error as AxiosError
       if (err.response) openNotification('bottom', 'Sorry', err.response.data.message, <FrownOutlined style={{ color: '#ff2800' }} />)
       else openNotification('bottom', 'Sorry', 'Secret can not be revealed!', <FrownOutlined style={{ color: '#ff2800' }} />)
