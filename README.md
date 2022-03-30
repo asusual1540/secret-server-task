@@ -1,3 +1,7 @@
+# Secret Server Coding Task Hosting
+
+The server is hosted on [Heroku](https://a-secret-server.herokuapp.com/)
+
 # Secret Server Coding Task
 
 ## Introduction
