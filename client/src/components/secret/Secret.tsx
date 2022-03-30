@@ -1,67 +1,55 @@
-import React, { useEffect, useState } from 'react'
-import { Form, Input, Button, DatePicker, Typography } from 'antd'
-import moment from 'moment';
+import React, { useContext, useEffect, useState } from 'react'
+import { Form, Input, Button, Typography, Spin } from 'antd'
 import { useParams } from 'react-router-dom'
+import {AxiosError} from 'axios'
 import { SmileOutlined, FrownOutlined } from '@ant-design/icons';
 
 
 import * as secretService from './SecretService'
 import { openNotification } from '../utils/Notification'
-
+import { ApplicationContext } from '../../context/ApplicationContext';
+import SingleSecret from './SingleSecret';
 
 
 const { Title } = Typography
 
 
-
-const Secret = () => {
+const Secret: React.FC = () => {
+  const { setSecret } = useContext(ApplicationContext)
   const [hasValidHash, setHasValidHash] = useState(false)
-  const [secret, setSecret] = useState({ hash: '', secretText : '', createdAt: '', expireAt : ''})
-  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false)
+  
   const { hash } = useParams()
-
 
   const loadSecret = async (hash: string) => {
     try {
+      setLoading(true)
       const response = await secretService.getSecret(hash)
-      console.log(response)
+      setLoading(false)
       if (response.data.status === 'success') {
         const secret = response.data.data
-        openNotification('Success', 'Secret was decoded from the hash.', <SmileOutlined style={{ color: '#108ee9' }} />)
+        openNotification('bottom', 'Success', 'Secret was revealed from the hash.', <SmileOutlined style={{ color: '#108ee9' }} />)
         setSecret(secret)
         setHasValidHash(true)
-        form.setFieldsValue({
-          secretText: secret.secretText, 
-          createdAt : moment(secret.createdAt, "YYYY-MM-DD HH:mm:ss"),
-          expireAt : moment(secret.expireAt, "YYYY-MM-DD HH:mm:ss")
-        });
-      } else {
+      } else if (response.data.status === 'failed') {
         const err_res = response.data
-        openNotification(err_res.status.capitalize(), err_res.message, <FrownOutlined style={{ color: '#ff2800' }} />)
-        form.setFieldsValue({
-          secretText: '', 
-          createdAt : '',
-          expireAt : ''
-        });
+        openNotification('bottom', err_res.status.capitalize(), err_res.message, <FrownOutlined style={{ color: '#ff2800' }} />)
       }
-    } catch (err) {
-      openNotification('Sorry', 'Secret was not found!', <FrownOutlined style={{ color: '#ff2800' }} />)
-      form.setFieldsValue({
-        secretText: '', 
-        createdAt : '',
-        expireAt : ''
-      });
+    } catch (error) {
+      setLoading(false)
+      const err = error as AxiosError
+      if (err.response) openNotification('bottom', 'Sorry', err.response.data.message, <FrownOutlined style={{ color: '#ff2800' }} />)
+      else openNotification('bottom', 'Sorry', 'Secret can not be revealed!', <FrownOutlined style={{ color: '#ff2800' }} />)
     }
-    
   }
+
   useEffect(() => {
     if (hash) {
       loadSecret(hash)
     }
-  }, [])
+  }, [hash])
 
   const onFinishSearching = async (values: any) => {
-    console.log(values.hash)
     await loadSecret(values.hash)
   };
 
@@ -69,7 +57,7 @@ const Secret = () => {
   return (
     <div className='add-secret-container'>
       <div className="add-secret-form">
-        <Title level={2}>Reveal Secret</Title>
+        <Title level={4}>Reveal Secret</Title>
         <Form
           name="search_secret"
           className="search-secret"
@@ -93,53 +81,9 @@ const Secret = () => {
               Reveal
             </Button>
           </Form.Item>
-
         </Form>
-        {hasValidHash ?
-          <div>
-
-            <Form
-              name="search_secret"
-              className="search-secret"
-              layout="vertical"
-              form={form}
-              initialValues={{ 
-                secretText: secret.secretText, 
-                createdAt : moment(secret.createdAt, "YYYY-MM-DD HH:mm:ss"),
-                expireAt : moment(secret.expireAt, "YYYY-MM-DD HH:mm:ss")
-              }}
-            >
-
-              <Title level={2}>Your Secret</Title>
-
-
-              <Form.Item
-                name="secretText"
-                label="Secret Text"
-              >
-                <Input
-                  placeholder="Type Hash" readOnly={true}
-                />
-              </Form.Item>
-              <Form.Item
-                name="createdAt"
-                label="Created At"
-              >
-                <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" disabled={true}/>
-                </Form.Item>
-              <Form.Item
-                name="expireAt"
-                label="Expire At"
-              >
-                <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" disabled={true}/>
-              </Form.Item>
-            </Form>
-          </div>
-          :
-          <div>
-
-          </div>
-        }
+        { loading ? <Spin tip="Revealing..."> </Spin> : <div> </div> }
+        { hasValidHash ? <SingleSecret /> : <div></div> }
       </div>
 
     </div>

@@ -1,0 +1,11 @@
+.env
+dist
+server/build
+server/dist
+server/.env
+node_modules
+client/node_modules
+client/build
+client/.env
+client/.env.development
+client/.env.production

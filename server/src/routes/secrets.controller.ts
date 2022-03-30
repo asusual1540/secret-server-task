@@ -24,15 +24,15 @@ export const create_a_secret: RequestHandler = async (req, res) => {
     }
 }
 
-export const get_all_secrets: RequestHandler = async (req, res) => {
-    try {
-        const secrets = await Secret.find()
-        return res.json({"status": "success", "message": "Successfully fetched all your secrets.", "data" : secrets})
-    } catch (ex) {
-        console.log(ex)
-        return res.json({"status": "failed", "message": "Error while getting all the secrets!", "data" : {}})
-    }
-}
+// export const get_all_secrets: RequestHandler = async (req, res) => {
+//     try {
+//         const secrets = await Secret.find()
+//         return res.json({"status": "success", "message": "Successfully fetched all your secrets.", "data" : secrets})
+//     } catch (ex) {
+//         console.log(ex)
+//         return res.json({"status": "failed", "message": "Error while getting all the secrets!", "data" : {}})
+//     }
+// }
 
 export const get_a_secret: RequestHandler = async (req, res) => {
     try {
