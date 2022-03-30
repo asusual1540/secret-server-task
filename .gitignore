@@ -1,5 +1,6 @@
 .env
 dist
+build/*
 server/build
 server/dist
 server/.env
